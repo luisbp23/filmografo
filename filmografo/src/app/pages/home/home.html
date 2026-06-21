@@ -1,1 +1,132 @@
-<p>home works!</p>
+<h1 class="text-3xl font-bold text-orange-400 mb-1">Bem-vindo(a) ao Filmógrafo!</h1>
+<p class="text-gray-600 text-lg mb-10 font-medium">Explore o catálogo de centenas de filmes e séries de todo o mundo.</p>
+
+<!-- Tendências (Hoje / Esta Semana) -->
+<div class="mb-12">
+  <div class="flex items-center gap-4 mb-4">
+    <h2 class="text-2xl font-bold text-orange-400">Tendências</h2>
+
+    <div class="inline-flex rounded-full bg-[#e6e2ec] p-1">
+      <button
+        type="button"
+        (click)="loadTrending('day')"
+        class="px-4 py-1 rounded-full text-sm font-semibold transition-colors"
+        [class.bg-purple-500]="trendingWindow === 'day'"
+        [class.text-white]="trendingWindow === 'day'"
+        [class.text-gray-600]="trendingWindow !== 'day'">
+        Hoje
+      </button>
+      <button
+        type="button"
+        (click)="loadTrending('week')"
+        class="px-4 py-1 rounded-full text-sm font-semibold transition-colors"
+        [class.bg-purple-500]="trendingWindow === 'week'"
+        [class.text-white]="trendingWindow === 'week'"
+        [class.text-gray-600]="trendingWindow !== 'week'">
+        Esta Semana
+      </button>
+    </div>
+  </div>
+
+  <div class="relative flex items-center gap-2">
+    <button
+      type="button"
+      (click)="scrollTrending('left')"
+      class="text-orange-400 hover:text-orange-500 text-3xl font-light pr-2 shrink-0">
+      &lt;
+    </button>
+
+    <div #trendingTrack class="flex gap-6 overflow-x-auto scroll-smooth w-full snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      @if (isLoadingTrending) {
+        @for (item of [1,2,3,4,5]; track $index) {
+          <div class="flex flex-col gap-2 w-44 shrink-0 snap-start animate-pulse">
+            <div class="w-full h-64 bg-gray-200 rounded-md"></div>
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+          </div>
+        }
+      } @else {
+        @for (movie of trendingMovies; track movie.id) {
+          <div class="flex flex-col gap-2 w-44 shrink-0 snap-start cursor-pointer hover:scale-105 transition-transform duration-300">
+            <img
+              [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'https://placehold.co/342x513?text=Sem+poster'"
+              [alt]="movie.title"
+              loading="lazy"
+              class="w-full h-64 object-cover rounded-md shadow-md">
+
+            <div class="leading-tight mt-1">
+              <p class="font-bold text-gray-800 text-[15px] truncate" [title]="movie.title">{{ movie.title }}</p>
+              <p class="text-gray-500 text-sm">{{ movie.release_date | date:'yyyy' }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <button
+      type="button"
+      (click)="scrollTrending('right')"
+      class="text-orange-400 hover:text-orange-500 text-3xl font-light pl-2 shrink-0">
+      &gt;
+    </button>
+  </div>
+</div>
+
+<!-- Populares -->
+<div class="mb-12">
+  <h2 class="text-2xl font-bold text-orange-400 mb-4">Populares</h2>
+
+  <div class="relative flex items-center gap-2">
+    <button
+      type="button"
+      (click)="scrollPopular('left')"
+      class="text-orange-400 hover:text-orange-500 text-3xl font-light pr-2 shrink-0">
+      &lt;
+    </button>
+
+    <div #popularTrack class="flex gap-6 overflow-x-auto scroll-smooth w-full snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      @for (movie of popularMovies; track movie.id) {
+        <div class="flex flex-col gap-2 w-44 shrink-0 snap-start cursor-pointer hover:scale-105 transition-transform duration-300">
+          <img
+            [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'https://placehold.co/342x513?text=Sem+poster'"
+            [alt]="movie.title"
+            loading="lazy"
+            class="w-full h-64 object-cover rounded-md shadow-md">
+
+          <div class="leading-tight mt-1">
+            <p class="font-bold text-gray-800 text-[15px] truncate" [title]="movie.title">{{ movie.title }}</p>
+            <p class="text-gray-500 text-sm">{{ movie.release_date | date:'yyyy' }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button
+      type="button"
+      (click)="scrollPopular('right')"
+      class="text-orange-400 hover:text-orange-500 text-3xl font-light pl-2 shrink-0">
+      &gt;
+    </button>
+  </div>
+</div>
+
+<div>
+  <h2 class="text-2xl font-bold text-orange-400 mb-4">Comédia</h2>
+  <div class="flex items-center gap-2">
+    <button class="text-orange-400 hover:text-orange-500 text-3xl font-light pr-2">&lt;</button>
+
+    <div class="flex gap-6 overflow-hidden w-full">
+      @for (item of [1,2,3,4,5]; track $index) {
+        <div class="flex flex-col gap-2 w-44 shrink-0">
+          <div class="w-full h-64 bg-gray-200 rounded-md shadow-sm"></div>
+          <div class="leading-tight mt-1">
+            <p class="font-bold text-gray-800 text-[15px]">Título</p>
+            <p class="text-gray-500 text-sm">Género</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button class="text-orange-400 hover:text-orange-500 text-3xl font-light pl-2">&gt;</button>
+  </div>
+</div>
