@@ -1,0 +1,58 @@
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #6A2C70;
+}
+
+.logo img {
+    height: 148px;
+    cursor: pointer;
+}
+
+.logo-hover {
+    display: none;
+}
+
+.logo:hover .logo-normal {
+    display: none;
+}
+
+.logo:hover .logo-hover {
+    display: block;
+}
+
+.search-bar {
+    background: white;
+    border: none;
+    outline: none;
+    width: 60%;
+    align-items: center;
+}
+
+.search-bar input {
+    color: #393939;
+    font-family: 'Audiowide', sans-serif;
+    border: none;
+    font-size: 38px;
+}
+
+.search-icon {
+    width: 65px;
+}
+
+.topbar-icons {
+    display: flex;
+    gap: 16px;
+}
+
+.icon {
+    width: 65px;
+    color: #F08A5D;
+    cursor: pointer;
+}
+
+.icon:hover {
+    color: #F9ED69;
+}
