@@ -1,0 +1,11 @@
+/* Estilos específicos da página de pesquisa, se forem necessários além do Tailwind. */
+
+/* Trunca a sinopse em 3 linhas. O Tailwind 3 só tem line-clamp via plugin
+   opcional (@tailwindcss/line-clamp), que não está instalado neste projeto,
+   por isso replicamos o efeito diretamente em CSS. */
+.search-overview-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
