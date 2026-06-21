@@ -1,0 +1,39 @@
+::ng-deep .mat-mdc-menu-panel {
+  background-color: #ffffff !important;
+  border: 4px solid #F08A5D !important;
+  border-radius: 12px !important;
+  min-width: 250px;
+}
+
+::ng-deep .mat-mdc-menu-panel * {
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 18px !important;
+  letter-spacing: normal !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: #393939 !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  color: #393939 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 24px !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: #6A2C70 !important;
+  color: #F9ED69 !important;
+}
+
+::ng-deep .mat-mdc-menu-content {
+  padding: 0 !important;
+  background-color: #ffffff !important;
+}
+
+.menu-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}

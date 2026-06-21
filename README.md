@@ -14,5 +14,6 @@ O website foi desenvolvido em Angular, com TypeScript para o backend e HTML/CSS 
 ## Estrutura do Repositório
 
 - README.md para descrição do projeto
+- gitignore para ignorar dados sensíveis e ficheiros desnecessários
 - filmografo, diretoria onde fica o código
 - supabase, diretoria onde ficam as configurações do Supabase
