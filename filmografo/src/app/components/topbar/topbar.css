@@ -2,13 +2,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
     background-color: #6A2C70;
 }
 
+.logo {
+    display: block;
+    position: relative;
+    height: 96px;
+}
+
 .logo img {
-    height: 148px;
+    height: 100px;
+    position: absolute;
     cursor: pointer;
+    padding-left: 20px;
+    padding-right: 96px;
+    top: 0;
+    left: 0;
 }
 
 .logo-hover {
@@ -29,26 +39,33 @@
     outline: none;
     width: 60%;
     align-items: center;
+    border-radius: 20px;
+    display: flex;
+    padding: 8px 16px;
+    gap: 10px;
 }
 
 .search-bar input {
     color: #393939;
     font-family: 'Audiowide', sans-serif;
     border: none;
-    font-size: 38px;
+    font-size: 28px;
+    width: 100%;
 }
 
 .search-icon {
-    width: 65px;
+    width: 30px;
+    flex-shrink: 0;
 }
 
 .topbar-icons {
     display: flex;
     gap: 16px;
+    padding-right: 20px;
 }
 
 .icon {
-    width: 65px;
+    width: 55px;
     color: #F08A5D;
     cursor: pointer;
 }
