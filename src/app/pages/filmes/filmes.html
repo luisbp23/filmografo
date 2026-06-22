@@ -1,0 +1,32 @@
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-orange-400 mb-2">Catálogo de Filmes</h1>
+  <p class="text-gray-600">Descubra os filmes mais populares do momento.</p>
+</div>
+
+@if (isLoading) {
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+    @for (item of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
+      <div class="flex flex-col gap-2 animate-pulse">
+        <div class="w-full aspect-[2/3] bg-gray-200 rounded-md"></div>
+        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+    @for (movie of filmes; track movie.id) {
+      <div [routerLink]="['/filmes', movie.id]" class="flex flex-col gap-2 cursor-pointer hover:scale-105 transition-transform duration-300">
+        <img
+          [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path : 'https://placehold.co/342x513?text=Sem+poster'"
+          [alt]="movie.title"
+          loading="lazy"
+          class="w-full aspect-[2/3] object-cover rounded-md shadow-md bg-gray-100">
+
+        <div class="leading-tight mt-1">
+          <p class="font-bold text-gray-800 text-[15px] truncate" [title]="movie.title">{{ movie.title }}</p>
+          <p class="text-gray-500 text-sm">{{ movie.release_date | date:'yyyy' }}</p>
+        </div>
+      </div>
+    }
+  </div>
+}

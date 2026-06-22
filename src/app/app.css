@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 48px;
+  
+  /* --- AS DUAS LINHAS MÁGICAS --- */
+  min-width: 0; 
+  overflow-x: hidden;
+}
