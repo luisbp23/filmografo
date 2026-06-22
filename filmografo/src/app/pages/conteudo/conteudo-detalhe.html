@@ -1,0 +1,68 @@
+@if (isLoading) {
+  <div class="p-8 text-gray-500 italic">A carregar detalhes...</div>
+} @else if (conteudo) {
+  <div class="flex flex-col gap-8">
+
+    <button
+      (click)="voltar()"
+      class="flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors w-fit">
+      ← Voltar
+    </button>
+
+    <section class="flex flex-col md:flex-row gap-8">
+      <img
+        [src]="conteudo.imageurl || 'https://placehold.co/300x450?text=Sem+Poster'"
+        [alt]="conteudo.title"
+        class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
+
+      <div class="flex flex-col gap-4">
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-green-100 text-green-600">
+            Local
+          </span>
+          <span class="text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-orange-100 text-orange-500">
+            {{ conteudo.type === 'movie' ? 'Filme' : 'Série' }}
+          </span>
+          <span class="text-xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+            {{ conteudo.state }}
+          </span>
+        </div>
+
+        <h1 class="text-4xl font-bold text-gray-900">{{ conteudo.title }}</h1>
+
+        @if (conteudo.genre) {
+          <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full w-fit">
+            {{ conteudo.genre }}
+          </span>
+        }
+
+        <div>
+          <h2 class="text-xl font-bold text-gray-800 mb-1">Sinopse</h2>
+          <p class="text-gray-600 leading-relaxed max-w-3xl">
+            {{ conteudo.synopsis || 'Nenhuma sinopse disponível.' }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-sm max-w-md">
+          @if (conteudo.type === 'movie' && conteudo.duration) {
+            <div>
+              <span class="font-bold text-gray-700">Duração:</span>
+              <span class="text-gray-600"> {{ conteudo.duration }} minutos</span>
+            </div>
+          }
+          @if (conteudo.type === 'series' && conteudo.episodes) {
+            <div>
+              <span class="font-bold text-gray-700">Episódios:</span>
+              <span class="text-gray-600"> {{ conteudo.episodes }}</span>
+            </div>
+          }
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+} @else {
+  <div class="p-8 text-gray-500">Não foi possível encontrar as informações deste conteúdo.</div>
+}

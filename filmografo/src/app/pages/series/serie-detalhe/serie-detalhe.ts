@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Tmdb } from '../../../tmdb';
 import { ReviewForm } from '../../../components/review-form/review-form';
@@ -7,7 +7,7 @@ import { ReviewForm } from '../../../components/review-form/review-form';
 @Component({
   selector: 'app-serie-detalhe',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, ReviewForm],
+  imports: [DatePipe, DecimalPipe, ReviewForm, RouterLink],
   templateUrl: './serie-detalhe.html',
   styleUrl: './serie-detalhe.css'
 })

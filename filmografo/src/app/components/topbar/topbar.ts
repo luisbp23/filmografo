@@ -1,20 +1,22 @@
-import { Component, inject, ElementRef, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { FormsModule } from '@angular/forms';
 import { DropdownMenu, MenuOption } from '../dropdown-menu/dropdown-menu';
 import { AuthService } from '../../services/auth';
+import { LanguageService, Lang } from '../../services/language';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-topbar',
-  imports: [RouterLink, FormsModule, DropdownMenu],
+  imports: [RouterLink, FormsModule, DropdownMenu, TranslatePipe],
   templateUrl: './topbar.html',
   styleUrl: './topbar.css',
 })
 export class Topbar implements OnInit {
   isLoggedIn = false;
   private router = inject(Router);
-  private elementRef = inject(ElementRef<HTMLElement>);
   private auth = inject(AuthService);
+  lang = inject(LanguageService);
   query = '';
 
   ngOnInit() {
@@ -29,19 +31,22 @@ export class Topbar implements OnInit {
     }
   }
 
-  // Função que apaga o texto da barra de pesquisa
   clearSearch(): void {
     this.query = '';
   }
 
-  accountOptions: MenuOption[] = [
-    { label: 'Definições', action: () => this.definicoes() },
-    { label: 'Terminar sessão', action: () => this.terminarSessao() },
-  ]
-
-  definicoes() {
-    console.log('definicoes');
+  adicionarConteudo() {
+    this.router.navigate(['/add-content']);
   }
+
+  setLang(language: Lang): void {
+    this.lang.setLang(language);
+  }
+
+  accountOptions: MenuOption[] = [
+    { label: this.lang.t('auth.settings'), action: () => console.log('definicoes') },
+    { label: this.lang.t('auth.logout'), action: () => this.terminarSessao() },
+  ];
 
   terminarSessao() {
     this.auth.signOut().then(() => {
