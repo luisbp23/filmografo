@@ -17,3 +17,7 @@ O website foi desenvolvido em Angular, com TypeScript para o backend e HTML/CSS 
 - gitignore para ignorar dados sensíveis e ficheiros desnecessários
 - filmografo, diretoria onde fica o código
 - supabase, diretoria onde ficam as configurações do Supabase
+
+## Chaves de API
+
+Adicionar as chaves das APIs num ficheiro com o caminho `src/environments/environment.development.ts` com a mesma estrutura do ficheiro `environment.ts`
