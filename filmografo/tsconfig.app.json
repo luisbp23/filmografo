@@ -4,7 +4,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "rootDir": "src"
   },
   "include": [
     "src/**/*.ts"

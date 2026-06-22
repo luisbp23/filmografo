@@ -29,6 +29,11 @@ export class Topbar implements OnInit {
     }
   }
 
+  // Função que apaga o texto da barra de pesquisa
+  clearSearch(): void {
+    this.query = '';
+  }
+
   accountOptions: MenuOption[] = [
     { label: 'Definições', action: () => this.definicoes() },
     { label: 'Terminar sessão', action: () => this.terminarSessao() },

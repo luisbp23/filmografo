@@ -1,0 +1,63 @@
+@if (isLoading) {
+  <div class="p-8 text-gray-500 italic">A carregar detalhes da pessoa...</div>
+} @else if (pessoa) {
+  <div class="flex flex-col gap-8">
+    
+    <section class="flex flex-col md:flex-row gap-8">
+      <img 
+        [src]="pessoa.profile_path ? 'https://image.tmdb.org/t/p/w500' + pessoa.profile_path : 'https://placehold.co/300x450?text=Sem+Foto'" 
+        [alt]="pessoa.name"
+        class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
+
+      <div class="flex flex-col gap-4">
+        <h1 class="text-4xl font-bold text-gray-900">{{ pessoa.name }}</h1>
+
+        <div class="grid grid-cols-1 gap-2 text-sm max-w-md">
+          <div>
+            <span class="font-bold text-gray-700">Profissão:</span> 
+            <span class="text-gray-600"> {{ pessoa.known_for_department }}</span>
+          </div>
+          @if (pessoa.birthday) {
+            <div>
+              <span class="font-bold text-gray-700">Nascimento:</span> 
+              <span class="text-gray-600"> {{ pessoa.birthday | date:'dd/MM/yyyy' }}</span>
+            </div>
+          }
+          @if (pessoa.place_of_birth) {
+            <div>
+              <span class="font-bold text-gray-700">Local:</span> 
+              <span class="text-gray-600"> {{ pessoa.place_of_birth }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="mt-2">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">Biografia</h2>
+          <p class="text-gray-600 leading-relaxed max-w-3xl whitespace-pre-line text-sm">
+            {{ pessoa.biography || 'Biografia não disponível em português.' }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-orange-400 mb-4">Conhecido(a) por</h2>
+      <div class="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        @for (work of pessoa.combined_credits?.cast?.slice(0, 10); track work.id) {
+          <div class="w-32 shrink-0 flex flex-col gap-1 text-center cursor-pointer">
+            <img 
+              [src]="work.poster_path ? 'https://image.tmdb.org/t/p/w185' + work.poster_path : 'https://placehold.co/100x150?text=Sem+Poster'" 
+              [alt]="work.title || work.name"
+              class="w-32 h-48 object-cover rounded-md shadow-sm bg-gray-100">
+            <p class="text-[13px] font-bold text-gray-800 truncate" [title]="work.title || work.name">
+              {{ work.title || work.name }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+
+  </div>
+} @else {
+  <div class="p-8 text-gray-500">Não foi possível encontrar as informações desta pessoa.</div>
+}

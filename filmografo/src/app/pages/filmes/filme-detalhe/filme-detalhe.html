@@ -1,0 +1,79 @@
+@if (isLoading) {
+  <div class="p-8 text-gray-500 italic">A carregar detalhes do filme...</div>
+} @else if (filme) {
+  <div class="flex flex-col gap-8">
+    
+    <section class="flex flex-col md:flex-row gap-8">
+      <img 
+        [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w500' + filme.poster_path : 'https://placehold.co/300x450?text=Sem+Poster'" 
+        [alt]="filme.title"
+        class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
+
+      <div class="flex flex-col gap-4">
+        <h1 class="text-4xl font-bold text-gray-900">
+          {{ filme.title }}
+          @if (filme.release_date) {
+            <span class="font-normal text-gray-400">({{ filme.release_date | date:'yyyy' }})</span>
+          }
+        </h1>
+
+        <div class="flex flex-wrap gap-2">
+          @for (genre of filme.genres; track genre.id) {
+            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+              {{ genre.name }}
+            </span>
+          }
+        </div>
+
+        <p class="text-sm text-gray-500 italic">{{ filme.tagline }}</p>
+
+        <div>
+          <h2 class="text-xl font-bold text-gray-800 mb-1">Sinopse</h2>
+          <p class="text-gray-600 leading-relaxed max-w-3xl">
+            {{ filme.overview || 'Nenhuma sinopse disponível em português.' }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-sm max-w-md">
+          <div>
+            <span class="font-bold text-gray-700">Duração:</span> 
+            <span class="text-gray-600"> {{ filme.runtime }} minutos</span>
+          </div>
+          <div>
+            <span class="font-bold text-gray-700">Avaliação TMDB:</span> 
+            <span class="text-gray-600"> ⭐ {{ filme.vote_average | number:'1.1-1' }}/10</span>
+          </div>
+          <div>
+            <span class="font-bold text-gray-700">Orçamento:</span> 
+            <span class="text-gray-600"> {{ filme.budget ? (filme.budget | currency:'USD':'symbol':'1.0-0') : 'Desconhecido' }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-orange-400 mb-4">Elenco Principal</h2>
+      <div class="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        @for (actor of filme.credits?.cast?.slice(0, 8); track actor.id) {
+          <div class="w-28 shrink-0 flex flex-col gap-1 text-center cursor-pointer">
+            <img 
+              [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'https://placehold.co/100x150?text=Sem+Foto'" 
+              [alt]="actor.name"
+              class="w-28 h-40 object-cover rounded-md shadow-sm bg-gray-100">
+            <p class="text-xs font-bold text-gray-800 truncate" [title]="actor.name">{{ actor.name }}</p>
+            <p class="text-[11px] text-gray-500 truncate" [title]="actor.character">{{ actor.character }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <hr class="border-gray-200 my-4">
+
+    <section class="max-w-xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+      <app-review-form></app-review-form>
+    </section>
+
+  </div>
+} @else {
+  <div class="p-8 text-gray-500">Não foi possível encontrar as informações deste filme.</div>
+}

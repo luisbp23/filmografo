@@ -8,13 +8,14 @@ import {
   OnInit
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Tmdb, TmdbMovie, TrendingWindow } from '../../tmdb';
 import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -25,8 +26,11 @@ export class Home implements OnInit {
 
   popularMovies: TmdbMovie[] = [];
   trendingMovies: TmdbMovie[] = [];
+  comedyMovies: TmdbMovie[] = []; // <-- NOVA VARIÁVEL
+  
   trendingWindow: TrendingWindow = 'day';
   isLoadingTrending = false;
+  isLoadingComedy = false; // <-- NOVA VARIÁVEL
 
   // Variáveis para controlar o título e sessão
   isLoggedIn = false;
@@ -34,11 +38,13 @@ export class Home implements OnInit {
 
   @ViewChild('popularTrack') popularTrackRef?: ElementRef<HTMLDivElement>;
   @ViewChild('trendingTrack') trendingTrackRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('comedyTrack') comedyTrackRef?: ElementRef<HTMLDivElement>; // <-- NOVA REFERÊNCIA
 
   constructor() {
     afterNextRender(() => {
       this.loadPopular();
       this.loadTrending('day');
+      this.loadComedy(); // <-- NOVA CHAMADA
     });
   }
 
@@ -65,11 +71,11 @@ export class Home implements OnInit {
 
   private loadPopular(): void {
     this.tmdb.getPopularMovies().subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.popularMovies = response.results;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao carregar filmes populares:', err);
       }
     });
@@ -80,14 +86,31 @@ export class Home implements OnInit {
     this.isLoadingTrending = true;
 
     this.tmdb.getTrendingMovies(window).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.trendingMovies = response.results;
         this.isLoadingTrending = false;
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao carregar tendencias:', err);
         this.isLoadingTrending = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // --- NOVO MÉTODO PARA COMÉDIAS ---
+  private loadComedy(): void {
+    this.isLoadingComedy = true;
+    this.tmdb.getComedyMovies().subscribe({
+      next: (response: any) => {
+        this.comedyMovies = response.results;
+        this.isLoadingComedy = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Erro ao carregar filmes de comédia:', err);
+        this.isLoadingComedy = false;
         this.cdr.detectChanges();
       }
     });
@@ -99,6 +122,11 @@ export class Home implements OnInit {
 
   scrollTrending(direction: 'left' | 'right'): void {
     this.scroll(this.trendingTrackRef, direction);
+  }
+
+  // --- NOVO MÉTODO DE SCROLL ---
+  scrollComedy(direction: 'left' | 'right'): void {
+    this.scroll(this.comedyTrackRef, direction);
   }
 
   private scroll(track: ElementRef<HTMLDivElement> | undefined, direction: 'left' | 'right'): void {

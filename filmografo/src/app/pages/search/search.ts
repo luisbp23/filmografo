@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Tmdb } from '../../tmdb';
 
 export type SearchResultType = 'movie' | 'tv' | 'person';
@@ -19,7 +19,7 @@ export type SearchFilter = 'all' | SearchResultType;
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './search.html',
   styleUrl: './search.css'
 })
@@ -34,7 +34,6 @@ export class Search implements OnInit {
   isLoading = false;
 
   ngOnInit(): void {
-    // Escutamos os queryParams. Sempre que o URL mudar, fazemos nova pesquisa.
     this.route.queryParams.subscribe(params => {
       this.query = params['q'] || '';
       if (this.query) {
@@ -49,7 +48,6 @@ export class Search implements OnInit {
     this.isLoading = true;
     this.tmdb.search(query).subscribe({
       next: (response: any) => {
-        // Mapeamos a resposta complexa da API (multi-search) para a nossa interface
         this.results = response.results.map((item: any) => ({
           id: item.id,
           type: item.media_type as SearchResultType,
@@ -80,12 +78,10 @@ export class Search implements OnInit {
   get filteredResults(): SearchResult[] {
     let filtered = this.results;
 
-    // 1. Aplica o filtro de Tipo (Filmes, Séries, Pessoas)
     if (this.activeFilter !== 'all') {
       filtered = filtered.filter((result) => result.type === this.activeFilter);
     }
 
-    // 2. Aplica o filtro de Ano (se houver algum ano selecionado)
     if (this.selectedYear) {
       filtered = filtered.filter((result) => {
         if (!result.release_date) {
@@ -104,6 +100,15 @@ export class Search implements OnInit {
       case 'tv': return 'Série';
       case 'person': return 'Pessoa';
       default: return 'Desconhecido';
+    }
+  }
+
+  getDetailsRoute(result: SearchResult): any[] {
+    switch (result.type) {
+      case 'movie': return ['/filmes', result.id];
+      case 'tv': return ['/series', result.id];
+      case 'person': return ['/pessoas', result.id];
+      default: return [];
     }
   }
 }
