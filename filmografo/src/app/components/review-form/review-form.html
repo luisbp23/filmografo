@@ -1,17 +1,17 @@
 <div class="review-form">
-    <h3>Avliar</h3>
+    <h3>{{ 'review.title' | translate }}</h3>
 
     <div class="rating">
-        <label for="mat-slider">Classificação: {{ rating }}</label>
+        <label for="mat-slider">{{ 'review.rating' | translate }}: {{ rating }}</label>
         <mat-slider min="1" max="5" step="0.5">
             <input matSliderThumb [(ngModel)]="rating">
         </mat-slider>
     </div>
 
     <mat-form-field appearance="outline">
-        <mat-label>Crítica</mat-label>
-        <textarea matInput [(ngModel)]="texto" rows="5" placeholder="Escreva a sua crítica"></textarea>
+        <mat-label>{{ 'review.text' | translate }}</mat-label>
+        <textarea matInput [(ngModel)]="texto" rows="5" [placeholder]="'review.textPlaceholder' | translate"></textarea>
     </mat-form-field>
 
-    <button (click)="submit()">Submeter</button>
+    <button (click)="submit()">{{ 'review.submit' | translate }}</button>
 </div>

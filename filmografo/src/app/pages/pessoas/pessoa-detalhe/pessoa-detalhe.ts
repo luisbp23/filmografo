@@ -1,12 +1,12 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Tmdb } from '../../../tmdb';
 
 @Component({
   selector: 'app-pessoa-detalhe',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './pessoa-detalhe.html',
   styleUrl: './pessoa-detalhe.css'
 })

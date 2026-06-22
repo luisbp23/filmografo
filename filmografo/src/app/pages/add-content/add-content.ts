@@ -19,7 +19,7 @@ export class AddContent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-  creatorId: number | null = null; // Guardará o ID numérico do criador
+  creatorId: string | null = null;
 
   async ngOnInit() {
     this.initForm();
@@ -51,20 +51,8 @@ export class AddContent implements OnInit {
   // Descobre o ID (int8) da tua tabela 'user' com base na sessão atual
   async obterCreatorId() {
     const { data: { session } } = await this.auth.getSession();
-    if (session?.user?.email) {
-      const username = session.user.email.split('@')[0];
-      
-      const { data, error } = await this.auth.supabaseClient
-        .from('user')
-        .select('id')
-        .eq('username', username)
-        .single();
-
-      if (data) {
-        this.creatorId = data.id;
-      } else if (error) {
-        console.error('Erro ao mapear utilizador:', error);
-      }
+    if (session?.user?.id) {
+      this.creatorId = session.user.id;
     }
   }
 
@@ -81,7 +69,6 @@ export class AddContent implements OnInit {
 
     const formValues = this.contentForm.value;
 
-    // Alinhado rigorosamente com as colunas da tua tabela 'content'
     const payload: any = {
       creator: this.creatorId,
       type: formValues.type,
@@ -89,13 +76,11 @@ export class AddContent implements OnInit {
       imageurl: formValues.imageurl,
       genre: formValues.genre,
       synopsis: formValues.synopsis,
-      state: formValues.state,
-      tmdbid: null // Ignorado como pediste para ser simplificado
+      state: formValues.state
     };
 
-    // NOTA: Se adicionares estas duas colunas à tabela no Supabase, descomenta as linhas abaixo:
-    // if (formValues.type === 'movie') payload.duration = formValues.duration;
-    // if (formValues.type === 'series') payload.episodes = formValues.episodes;
+    if (formValues.type === 'movie') payload.duration = formValues.duration;
+    if (formValues.type === 'series') payload.episodes = formValues.episodes;
 
     try {
       const { error } = await this.auth.supabaseClient
@@ -105,7 +90,7 @@ export class AddContent implements OnInit {
       if (error) throw error;
 
       const tipoTexto = formValues.type === 'movie' ? 'Filme' : 'Série';
-      this.successMessage = `${tipoTexto} adicionado com sucesso ao Filmógrafo!`;
+      this.successMessage = `${tipoTexto} enviado para aprovação! Será publicado após revisão de um administrador.`;
       
       // Reinicia o formulário mantendo as definições padrão
       this.contentForm.reset({ type: formValues.type, state: 'Lançado' });

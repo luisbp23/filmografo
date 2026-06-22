@@ -7,6 +7,7 @@ import { Pessoas } from './pages/pessoas/pessoas';
 import { Login } from './pages/login/login';
 import { SignUp } from './pages/signup/signup';
 import { AddContent } from './pages/add-content/add-content';
+import { ConteudoDetalhe } from './pages/conteudo/conteudo-detalhe';
 
 // Imports atualizados com os novos caminhos integrados
 import { FilmeDetalhe } from './pages/filmes/filme-detalhe/filme-detalhe';
@@ -25,5 +26,6 @@ export const routes: Routes = [
     { path: 'login', component: Login },
     { path: 'signup', component: SignUp },
     { path:'add-content', component: AddContent},
+    { path: 'conteudo/:id', component: ConteudoDetalhe },
     { path: '**', redirectTo: '' }
 ];

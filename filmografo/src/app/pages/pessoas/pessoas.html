@@ -1,32 +1,64 @@
-<div class="mb-8">
-  <h1 class="text-3xl font-bold text-orange-400 mb-2">Pessoas</h1>
-  <p class="text-gray-600">Atores e realizadores que estão em destaque nas bilheteiras.</p>
-</div>
-
 @if (isLoading) {
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-    @for (item of [1,2,3,4,5,6,7,8,9,10,11,12]; track $index) {
-      <div class="flex flex-col gap-2 animate-pulse">
-        <div class="w-full aspect-[2/3] bg-gray-200 rounded-md"></div>
-        <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-      </div>
-    }
-  </div>
-} @else {
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-    @for (pessoa of pessoas; track pessoa.id) {
-      <div [routerLink]="['/pessoas', pessoa.id]" class="flex flex-col gap-2 cursor-pointer hover:scale-105 transition-transform duration-300 text-center">
-        <img
-          [src]="pessoa.profile_path ? 'https://image.tmdb.org/t/p/w500' + pessoa.profile_path : 'https://placehold.co/342x513?text=Sem+Foto'"
-          [alt]="pessoa.name"
-          loading="lazy"
-          class="w-full aspect-[2/3] object-cover rounded-md shadow-md bg-gray-100">
+  <div class="p-8 text-gray-500 italic">{{ 'detail.loading.person' | translate }}</div>
+} @else if (pessoa) {
+  <div class="flex flex-col gap-8">
+    
+    <section class="flex flex-col md:flex-row gap-8">
+      <img 
+        [src]="pessoa.profile_path ? 'https://image.tmdb.org/t/p/w500' + pessoa.profile_path : 'https://placehold.co/300x450?text=' + ('placeholder.noPhotoUrl' | translate)" 
+        [alt]="pessoa.name"
+        class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
 
-        <div class="leading-tight mt-2">
-          <p class="font-bold text-gray-800 text-[15px] truncate" [title]="pessoa.name">{{ pessoa.name }}</p>
-          <p class="text-gray-500 text-xs uppercase tracking-wide">{{ pessoa.known_for_department }}</p>
+      <div class="flex flex-col gap-4">
+        <h1 class="text-4xl font-bold text-gray-900">{{ pessoa.name }}</h1>
+
+        <div class="grid grid-cols-1 gap-2 text-sm max-w-md">
+          <div>
+            <span class="font-bold text-gray-700">{{ 'person.profession' | translate }}:</span> 
+            <span class="text-gray-600"> {{ pessoa.known_for_department }}</span>
+          </div>
+          @if (pessoa.birthday) {
+            <div>
+              <span class="font-bold text-gray-700">{{ 'person.birthday' | translate }}:</span> 
+              <span class="text-gray-600"> {{ pessoa.birthday | date:'dd/MM/yyyy' }}</span>
+            </div>
+          }
+          @if (pessoa.place_of_birth) {
+            <div>
+              <span class="font-bold text-gray-700">{{ 'person.birthplace' | translate }}:</span> 
+              <span class="text-gray-600"> {{ pessoa.place_of_birth }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="mt-2">
+          <h2 class="text-xl font-bold text-gray-800 mb-2">{{ 'person.biography' | translate }}</h2>
+          <p class="text-gray-600 leading-relaxed max-w-3xl whitespace-pre-line text-sm">
+            {{ pessoa.biography || ('person.noBiography' | translate) }}
+          </p>
         </div>
       </div>
-    }
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-orange-400 mb-4">{{ 'person.knownFor' | translate }}</h2>
+      <div class="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        @for (work of pessoa.combined_credits?.cast?.slice(0, 10); track work.id) {
+          <div class="w-32 shrink-0 flex flex-col gap-1 text-center cursor-pointer"
+     [routerLink]="[work.media_type === 'movie' ? '/filmes' : '/series', work.id]">
+            <img 
+              [src]="work.poster_path ? 'https://image.tmdb.org/t/p/w185' + work.poster_path : 'https://placehold.co/100x150?text=' + ('placeholder.noPosterUrl' | translate)" 
+              [alt]="work.title || work.name"
+              class="w-32 h-48 object-cover rounded-md shadow-sm bg-gray-100">
+            <p class="text-[13px] font-bold text-gray-800 truncate" [title]="work.title || work.name">
+              {{ work.title || work.name }}
+            </p>
+          </div>
+        }
+      </div>
+    </section>
+
   </div>
+} @else {
+  <div class="p-8 text-gray-500">{{ 'detail.error.person' | translate }}</div>
 }

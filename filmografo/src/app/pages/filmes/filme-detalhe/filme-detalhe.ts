@@ -1,20 +1,21 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // <-- Adicionado ChangeDetectorRef
-import { ActivatedRoute } from '@angular/router';
-import { DatePipe, CurrencyPipe, DecimalPipe } from '@angular/common'; 
-import { Tmdb } from '../../../tmdb'; 
-import { ReviewForm } from '../../../components/review-form/review-form'; 
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DatePipe, CurrencyPipe, DecimalPipe } from '@angular/common';
+import { Tmdb } from '../../../tmdb';
+import { ReviewForm } from '../../../components/review-form/review-form';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-filme-detalhe',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe, DecimalPipe, ReviewForm], 
+  imports: [DatePipe, CurrencyPipe, DecimalPipe, ReviewForm, RouterLink, TranslatePipe],
   templateUrl: './filme-detalhe.html',
   styleUrl: './filme-detalhe.css'
 })
 export class FilmeDetalhe implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdb = inject(Tmdb);
-  private cdr = inject(ChangeDetectorRef); // <-- Injetado aqui
+  private cdr = inject(ChangeDetectorRef);
 
   filme: any = null;
   isLoading = true;
@@ -34,13 +35,13 @@ export class FilmeDetalhe implements OnInit {
       next: (data) => {
         this.filme = data;
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- Força a atualização do HTML
+        this.cdr.detectChanges();
         console.log('Detalhes do Filme:', data);
       },
       error: (err) => {
         console.error('Erro ao carregar detalhes do filme:', err);
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- Força a atualização do HTML mesmo com erro
+        this.cdr.detectChanges();
       }
     });
   }
