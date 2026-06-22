@@ -4,11 +4,13 @@ import {
   afterNextRender,
   ChangeDetectorRef,
   ElementRef,
-  ViewChild
+  ViewChild, 
+  OnInit
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Tmdb, TmdbMovie, TrendingWindow } from '../../tmdb';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-home',
@@ -17,9 +19,10 @@ import { Tmdb, TmdbMovie, TrendingWindow } from '../../tmdb';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home {
+export class Home implements OnInit {
   private tmdb = inject(Tmdb);
   private cdr = inject(ChangeDetectorRef);
+  private auth = inject(AuthService); // Serviço de Autenticação
 
   popularMovies: TmdbMovie[] = [];
   trendingMovies: TmdbMovie[] = [];
@@ -28,6 +31,10 @@ export class Home {
   trendingWindow: TrendingWindow = 'day';
   isLoadingTrending = false;
   isLoadingComedy = false; // <-- NOVA VARIÁVEL
+
+  // Variáveis para controlar o título e sessão
+  isLoggedIn = false;
+  username = '';
 
   @ViewChild('popularTrack') popularTrackRef?: ElementRef<HTMLDivElement>;
   @ViewChild('trendingTrack') trendingTrackRef?: ElementRef<HTMLDivElement>;
@@ -39,6 +46,27 @@ export class Home {
       this.loadTrending('day');
       this.loadComedy(); // <-- NOVA CHAMADA
     });
+  }
+
+  async ngOnInit() {
+    const { data: { session } } = await this.auth.getSession();
+    this.atualizarEstadoAutenticacao(session);
+
+    this.auth.onAuthChange((session) => {
+      this.atualizarEstadoAutenticacao(session);
+    });
+  }
+
+  private atualizarEstadoAutenticacao(session: any) {
+    this.isLoggedIn = !!session;
+    
+    if (session?.user?.email) {
+      this.username = session.user.email.split('@')[0];
+    } else {
+      this.username = '';
+    }
+    
+    this.cdr.detectChanges(); 
   }
 
   private loadPopular(): void {

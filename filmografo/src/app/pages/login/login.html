@@ -1,0 +1,56 @@
+<div class="min-h-screen flex items-center justify-center bg-[#faf9fb]">
+  <div class="w-full max-w-sm px-8 py-10 bg-white rounded-2xl shadow-lg">
+
+    <h1 class="text-3xl font-bold text-[#6A2C70] mb-1">Iniciar Sessão</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Nome de utilizador -->
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-[#393939] mb-1">
+          Nome de utilizador
+        </label>
+        <input
+          type="text"
+          formControlName="username"
+          placeholder="nome_utilizador"
+          class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6A2C70] text-[#393939] text-sm transition"/>
+        @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+          <p class="text-red-400 text-xs mt-1">Campo obrigatório</p>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="mb-7">
+        <label class="block text-sm font-semibold text-[#393939] mb-1">
+          Password
+        </label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#6A2C70] text-[#393939] text-sm transition"/>
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <p class="text-red-400 text-xs mt-1">Campo obrigatório</p>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <p class="text-red-400 text-sm text-center mb-4">{{ errorMessage }}</p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || isLoading"
+        class="w-full py-2 rounded-full bg-[#6A2C70] text-white font-semibold text-sm hover:bg-[#F9ED69] hover:text-[#6A2C70] transition disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isLoading ? 'A entrar...' : 'Iniciar sessão' }}
+      </button>
+
+      <p class="text-center text-sm text-[#393939] mt-5">
+        Não tem conta?
+        <a routerLink="/signup" class="text-[#6A2C70] font-semibold hover:text-[#F08A5D]">Registe-se</a>
+      </p>
+
+    </form>
+  </div>
+</div>
