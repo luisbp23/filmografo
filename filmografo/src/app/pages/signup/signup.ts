@@ -43,21 +43,27 @@ export class SignUp {
       const { username, password } = this.signupForm.value;
       const fakeEmail = `${username}@filmografo.com`;
       
-      const { error } = await this.auth.signUp(fakeEmail, password);
+      const { data, error } = await this.auth.signUp(fakeEmail, password);
       
       if (error) {
         this.errorMessage = error.message === 'User already registered'
         ? 'Este utilizador já existe.'
         : 'Erro ao criar conta. Tenta novamente.';
-      } else {
+      } else if (data.user) {
+        await this.auth.supabaseClient
+        .from('user')
+        .insert({
+          id: data.user.id,
+          username: username,
+          role: 'user'
+        });
+        
         this.router.navigate(['/']);
       }
     } catch (error) {
-      // Captura erros de rede ou configuração
       this.errorMessage = 'Não foi possível ligar ao servidor. Verifica a tua ligação.';
       console.error('Erro no SignUp:', error);
     } finally {
-      // Isto executa SEMPRE, quer corra bem ou mal
       this.isLoading = false;
     }
   }

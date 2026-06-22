@@ -12,37 +12,47 @@ import { AuthService } from '../../services/auth';
 })
 export class Topbar implements OnInit {
   isLoggedIn = false;
+  isAdmin = false;
   private router = inject(Router);
   private elementRef = inject(ElementRef<HTMLElement>);
   private auth = inject(AuthService);
   query = '';
-
+  
+  accountOptions: MenuOption[] = [];
+  
   ngOnInit() {
-    this.auth.onAuthChange(session => {
+    this.auth.onAuthChange(async session => {
       this.isLoggedIn = !!session;
+      if (session) {
+        const role = await this.auth.getUserRole();
+        console.log('role:', role);  // ← adiciona isto
+        this.isAdmin = role === 'admin';
+        this.buildMenu();
+      } else {
+        this.accountOptions = [];
+      }
     });
   }
-
+  
+  buildMenu() {
+    setTimeout(() => {
+      this.accountOptions = [
+        ...(this.isAdmin ? [{ label: 'Painel Admin', action: () => this.router.navigate(['/admin']) }] : []),
+        { label: 'Terminar sessão', action: () => this.terminarSessao() },
+      ];
+    });
+  }
+  
   search(): void {
     if (this.query.trim()) {
       this.router.navigate(['/pesquisa'], { queryParams: { q: this.query } });
     }
   }
-
-  // Função que apaga o texto da barra de pesquisa
+  
   clearSearch(): void {
     this.query = '';
   }
-
-  accountOptions: MenuOption[] = [
-    { label: 'Definições', action: () => this.definicoes() },
-    { label: 'Terminar sessão', action: () => this.terminarSessao() },
-  ]
-
-  definicoes() {
-    console.log('definicoes');
-  }
-
+  
   terminarSessao() {
     this.auth.signOut().then(() => {
       this.router.navigate(['/login']);

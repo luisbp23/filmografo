@@ -23,7 +23,7 @@ export class Home implements OnInit {
   private tmdb = inject(Tmdb);
   private cdr = inject(ChangeDetectorRef);
   private auth = inject(AuthService); // Serviço de Autenticação
-
+  
   popularMovies: TmdbMovie[] = [];
   trendingMovies: TmdbMovie[] = [];
   comedyMovies: TmdbMovie[] = []; // <-- NOVA VARIÁVEL
@@ -31,15 +31,15 @@ export class Home implements OnInit {
   trendingWindow: TrendingWindow = 'day';
   isLoadingTrending = false;
   isLoadingComedy = false; // <-- NOVA VARIÁVEL
-
+  
   // Variáveis para controlar o título e sessão
   isLoggedIn = false;
   username = '';
-
+  
   @ViewChild('popularTrack') popularTrackRef?: ElementRef<HTMLDivElement>;
   @ViewChild('trendingTrack') trendingTrackRef?: ElementRef<HTMLDivElement>;
   @ViewChild('comedyTrack') comedyTrackRef?: ElementRef<HTMLDivElement>; // <-- NOVA REFERÊNCIA
-
+  
   constructor() {
     afterNextRender(() => {
       this.loadPopular();
@@ -47,16 +47,16 @@ export class Home implements OnInit {
       this.loadComedy(); // <-- NOVA CHAMADA
     });
   }
-
+  
   async ngOnInit() {
     const { data: { session } } = await this.auth.getSession();
     this.atualizarEstadoAutenticacao(session);
-
+    
     this.auth.onAuthChange((session) => {
       this.atualizarEstadoAutenticacao(session);
     });
   }
-
+  
   private atualizarEstadoAutenticacao(session: any) {
     this.isLoggedIn = !!session;
     
@@ -66,9 +66,9 @@ export class Home implements OnInit {
       this.username = '';
     }
     
-    this.cdr.detectChanges(); 
+    setTimeout(() => this.cdr.detectChanges()); // ← adiciona o setTimeout
   }
-
+  
   private loadPopular(): void {
     this.tmdb.getPopularMovies().subscribe({
       next: (response: any) => {
@@ -80,11 +80,11 @@ export class Home implements OnInit {
       }
     });
   }
-
+  
   loadTrending(window: TrendingWindow): void {
     this.trendingWindow = window;
     this.isLoadingTrending = true;
-
+    
     this.tmdb.getTrendingMovies(window).subscribe({
       next: (response: any) => {
         this.trendingMovies = response.results;
@@ -98,7 +98,7 @@ export class Home implements OnInit {
       }
     });
   }
-
+  
   // --- NOVO MÉTODO PARA COMÉDIAS ---
   private loadComedy(): void {
     this.isLoadingComedy = true;
@@ -115,26 +115,26 @@ export class Home implements OnInit {
       }
     });
   }
-
+  
   scrollPopular(direction: 'left' | 'right'): void {
     this.scroll(this.popularTrackRef, direction);
   }
-
+  
   scrollTrending(direction: 'left' | 'right'): void {
     this.scroll(this.trendingTrackRef, direction);
   }
-
+  
   // --- NOVO MÉTODO DE SCROLL ---
   scrollComedy(direction: 'left' | 'right'): void {
     this.scroll(this.comedyTrackRef, direction);
   }
-
+  
   private scroll(track: ElementRef<HTMLDivElement> | undefined, direction: 'left' | 'right'): void {
     const element = track?.nativeElement;
     if (!element) {
       return;
     }
-
+    
     const step = element.clientWidth * 0.8;
     element.scrollBy({
       left: direction === 'left' ? -step : step,

@@ -5,10 +5,10 @@
     
     <section class="flex flex-col md:flex-row gap-8">
       <img 
-        [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w500' + filme.poster_path : 'https://placehold.co/300x450?text=Sem+Poster'" 
-        [alt]="filme.title"
-        class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
-
+      [src]="filme.poster_path ? 'https://image.tmdb.org/t/p/w500' + filme.poster_path : 'https://placehold.co/300x450?text=Sem+Poster'" 
+      [alt]="filme.title"
+      class="w-64 h-96 object-cover rounded-lg shadow-lg bg-gray-100 shrink-0">
+      
       <div class="flex flex-col gap-4">
         <h1 class="text-4xl font-bold text-gray-900">
           {{ filme.title }}
@@ -16,7 +16,7 @@
             <span class="font-normal text-gray-400">({{ filme.release_date | date:'yyyy' }})</span>
           }
         </h1>
-
+        
         <div class="flex flex-wrap gap-2">
           @for (genre of filme.genres; track genre.id) {
             <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
@@ -24,16 +24,16 @@
             </span>
           }
         </div>
-
+        
         <p class="text-sm text-gray-500 italic">{{ filme.tagline }}</p>
-
+        
         <div>
           <h2 class="text-xl font-bold text-gray-800 mb-1">Sinopse</h2>
           <p class="text-gray-600 leading-relaxed max-w-3xl">
             {{ filme.overview || 'Nenhuma sinopse disponível em português.' }}
           </p>
         </div>
-
+        
         <div class="grid grid-cols-2 gap-4 text-sm max-w-md">
           <div>
             <span class="font-bold text-gray-700">Duração:</span> 
@@ -50,30 +50,113 @@
         </div>
       </div>
     </section>
-
+    
     <section>
       <h2 class="text-2xl font-bold text-orange-400 mb-4">Elenco Principal</h2>
       <div class="flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         @for (actor of filme.credits?.cast?.slice(0, 8); track actor.id) {
           <div class="w-28 shrink-0 flex flex-col gap-1 text-center cursor-pointer">
             <img 
-              [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'https://placehold.co/100x150?text=Sem+Foto'" 
-              [alt]="actor.name"
-              class="w-28 h-40 object-cover rounded-md shadow-sm bg-gray-100">
+            [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'https://placehold.co/100x150?text=Sem+Foto'" 
+            [alt]="actor.name"
+            class="w-28 h-40 object-cover rounded-md shadow-sm bg-gray-100">
             <p class="text-xs font-bold text-gray-800 truncate" [title]="actor.name">{{ actor.name }}</p>
             <p class="text-[11px] text-gray-500 truncate" [title]="actor.character">{{ actor.character }}</p>
           </div>
         }
       </div>
     </section>
-
+    
     <hr class="border-gray-200 my-4">
-
-    <section class="max-w-xl bg-gray-50 p-6 rounded-xl border border-gray-100">
-      <app-review-form></app-review-form>
+    
+    @if (isLoggedIn) {
+      <section class="max-w-xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+        <app-review-form [contentId]="filme.id" [contentType]="'movie'"></app-review-form>
+      </section>
+    } @else {
+      <section class="max-w-xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+        <p class="text-gray-500">
+          <a routerLink="/login" style="color: #F08A5D;">Iniciar sessão</a> 
+          para deixar uma crítica.
+        </p>
+      </section>
+    }
+    
+    <section class="max-w-2xl mt-4">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-2xl font-bold" style="color: #393939;">Críticas</h2>
+        @if (reviews.length > 0) {
+          <span class="text-lg font-semibold" style="color: #F08A5D;">
+            ⭐ {{ mediaAval }}/5
+          </span>
+          <span class="text-sm text-gray-500">({{ reviews.length }} críticas)</span>
+        }
+      </div>
+      
+      @if (reviews.length === 0) {
+        <p class="text-gray-500">Ainda não há críticas. Seja o primeiro!</p>
+      } @else {
+        <div class="flex flex-col gap-4">
+          @for (review of reviews; track review.id) {
+            <div class="p-4 rounded-xl border-2 bg-gray-50" style="border-color: #6A2C70;">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold" style="color: #393939;">{{ review.user?.username }}</span>
+                <div class="flex items-center gap-3">
+                  <span class="font-semibold" style="color: #F08A5D;">⭐ {{ review.aval }}/5</span>
+                  <!-- botão de denúncia -->
+                  <button (click)="denunciar(review.id)" title="Denunciar crítica">
+                    📣
+                  </button>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">{{ review.text }}</p>
+            </div>
+          }
+        </div>
+      }
     </section>
-
+    
+    @if (denunciaAberta !== -1) {
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md flex flex-col gap-4">
+          <h3 class="text-xl font-bold" style="color: #393939;">Denunciar crítica</h3>
+          
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-semibold" style="color: #393939;">Motivo</label>
+            <select [(ngModel)]="denunciaReason" class="border rounded-lg p-2 text-sm">
+              <option value="">Seleciona um motivo</option>
+              <option value="spam">Spam</option>
+              <option value="ofensivo">Conteúdo ofensivo</option>
+              <option value="falso">Informação falsa</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+          
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-semibold" style="color: #393939;">Descrição</label>
+            <textarea [(ngModel)]="denunciaDesc" rows="3"
+            class="border rounded-lg p-2 text-sm"
+            placeholder="Descreve o problema..."></textarea>
+          </div>
+          
+          <div class="flex gap-3 justify-end">
+            <button (click)="cancelarDenuncia()"
+            class="px-4 py-2 rounded-lg border-2 text-sm font-semibold"
+            style="border-color: #393939; color: #393939;">
+            Cancelar
+          </button>
+          <button (click)="submeterDenuncia()"
+          [disabled]="!denunciaReason || denunciaLoading"
+          class="px-4 py-2 rounded-lg text-sm font-semibold"
+          style="background-color: #F08A5D; color: white;">
+          {{ denunciaLoading ? 'A enviar...' : 'Denunciar' }}
+        </button>
+      </div>
+    </div>
   </div>
+}
+
+</div>
 } @else {
   <div class="p-8 text-gray-500">Não foi possível encontrar as informações deste filme.</div>
 }
