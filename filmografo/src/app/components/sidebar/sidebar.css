@@ -3,7 +3,7 @@
   flex-direction: column;
   background-color: rgb(106, 44, 112, 0.4);
   gap: 8px;
-  min-height: 100vh;
+  min-height: 100%;
   width: 225px;
   padding-top: 40px;
 }
@@ -30,7 +30,7 @@
 .sidebar-item.active {
   border-left-color: #6A2C70;
   border-left-style: solid;
-  border-left-width: 30px;
+  border-left-width: 25px;
   background-color: white;
   color: #393939;
 }

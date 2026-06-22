@@ -3,9 +3,8 @@ import { CatalogPlaceholder } from '../../components/catalog-placeholder/catalog
 
 @Component({
   selector: 'app-filmes',
+  standalone: true,
   imports: [CatalogPlaceholder],
-  template: `<app-catalog-placeholder icon="🎬" label="Filmes"></app-catalog-placeholder>`,
-  templateUrl: './filmes.html',
-  styleUrl: './filmes.css',
+  template: `<app-catalog-placeholder icon="🎬" label="Filmes"></app-catalog-placeholder>`
 })
 export class Filmes {}
