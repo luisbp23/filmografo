@@ -37,4 +37,17 @@ export class AuthService {
   get supabaseClient() {
     return this.supabase;
   }
+  
+  async getUserRole(): Promise<string> {
+    const { data: { user } } = await this.supabase.auth.getUser();
+    if (!user) return 'user';
+    
+    const { data } = await this.supabase
+    .from('user')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+    
+    return data?.role ?? 'user';
+  }
 }

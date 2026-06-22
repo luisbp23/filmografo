@@ -14,17 +14,37 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 })
 export class Topbar implements OnInit {
   isLoggedIn = false;
+  isAdmin = false;
   private router = inject(Router);
   private auth = inject(AuthService);
   lang = inject(LanguageService);
   query = '';
-
+  
+  accountOptions: MenuOption[] = [];
+  
   ngOnInit() {
-    this.auth.onAuthChange(session => {
+    this.auth.onAuthChange(async session => {
       this.isLoggedIn = !!session;
+      if (session) {
+        const role = await this.auth.getUserRole();
+        console.log('role:', role);  // ← adiciona isto
+        this.isAdmin = role === 'admin';
+        this.buildMenu();
+      } else {
+        this.accountOptions = [];
+      }
     });
   }
-
+  
+  buildMenu() {
+    setTimeout(() => {
+      this.accountOptions = [
+        ...(this.isAdmin ? [{ label: 'Painel Admin', action: () => this.router.navigate(['/admin']) }] : []),
+        { label: 'Terminar sessão', action: () => this.terminarSessao() },
+      ];
+    });
+  }
+  
   search(): void {
     if (this.query.trim()) {
       this.router.navigate(['/pesquisa'], { queryParams: { q: this.query } });

@@ -1,17 +1,37 @@
-<div class="review-form">
-    <h3>{{ 'review.title' | translate }}</h3>
+<div class="flex flex-col gap-4">
+  <h3 class="text-xl font-bold" style="color: #393939; font-family: 'Audiowide', sans-serif;">
+    Avaliar
+  </h3>
 
-    <div class="rating">
-        <label for="mat-slider">{{ 'review.rating' | translate }}: {{ rating }}</label>
-        <mat-slider min="1" max="5" step="0.5">
-            <input matSliderThumb [(ngModel)]="rating">
-        </mat-slider>
-    </div>
+  <div class="flex flex-col gap-2">
+    <label class="text-sm font-semibold" style="color: #393939;">
+      Classificação: <span style="color: #F08A5D;">{{ rating }}/5</span>
+    </label>
+    <mat-slider min="1" max="5" step="0.5" class="w-full">
+      <input matSliderThumb [(ngModel)]="rating">
+    </mat-slider>
+  </div>
 
-    <mat-form-field appearance="outline">
-        <mat-label>{{ 'review.text' | translate }}</mat-label>
-        <textarea matInput [(ngModel)]="texto" rows="5" [placeholder]="'review.textPlaceholder' | translate"></textarea>
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Crítica</mat-label>
+    <textarea matInput [(ngModel)]="texto" rows="5"
+              placeholder="Escreve a tua crítica..."></textarea>
+  </mat-form-field>
 
-    <button (click)="submit()">{{ 'review.submit' | translate }}</button>
+  @if (successMessage) {
+    <p class="text-sm font-semibold" style="color: #F08A5D;">{{ successMessage }}</p>
+  }
+  @if (errorMessage) {
+    <p class="text-sm font-semibold text-red-500">{{ errorMessage }}</p>
+  }
+
+  <button
+    (click)="submit()"
+    [disabled]="isLoading"
+    class="px-6 py-2 rounded-lg font-semibold self-start transition-colors"
+    style="background-color: #F08A5D; color: white;"
+    onmouseover="this.style.backgroundColor='#F9ED69'; this.style.color='#393939'"
+    onmouseout="this.style.backgroundColor='#F08A5D'; this.style.color='white'">
+    {{ isLoading ? 'A submeter...' : 'Submeter' }}
+  </button>
 </div>

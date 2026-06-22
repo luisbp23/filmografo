@@ -1,0 +1,149 @@
+<div class="min-h-screen bg-white p-8">
+    
+    <h1 class="text-3xl font-bold mb-8" style="color: #393939; font-family: 'Audiowide', sans-serif;">
+        Painel de Administrador
+    </h1>
+    
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-8 border-b-2" style="border-color: #6A2C70;">
+        <button
+        (click)="activeTab = 'filmes'"
+        class="px-6 py-3 font-semibold transition-all duration-200 rounded-t-lg"
+        [style.background-color]="activeTab === 'filmes' ? '#6A2C70' : 'transparent'"
+        [style.color]="activeTab === 'filmes' ? 'white' : '#393939'">
+        🎬 Filmes
+    </button>
+    <button
+    (click)="activeTab = 'series'"
+    class="px-6 py-3 font-semibold transition-all duration-200 rounded-t-lg"
+    [style.background-color]="activeTab === 'series' ? '#6A2C70' : 'transparent'"
+    [style.color]="activeTab === 'series' ? 'white' : '#393939'">
+    📺 Séries
+</button>
+<button
+(click)="activeTab = 'denuncias'"
+class="px-6 py-3 font-semibold transition-all duration-200 rounded-t-lg"
+[style.background-color]="activeTab === 'denuncias' ? '#6A2C70' : 'transparent'"
+[style.color]="activeTab === 'denuncias' ? 'white' : '#393939'">
+🚨 Denúncias
+</button>
+</div>
+
+<!-- Filmes -->
+@if (activeTab === 'filmes') {
+    <div class="flex flex-col gap-4">
+        @for (item of filmesPendentes; track item.id) {
+            <div class="flex items-center justify-between p-4 rounded-xl border-2 shadow-sm"
+            style="border-color: #6A2C70;">
+            <div>
+                <p class="font-bold text-lg" style="color: #393939;">{{ item.title }}</p>
+                <p class="text-sm" style="color: #6A2C70;">{{ item.genre }} · {{ item.type }}</p>
+            </div>
+            <div class="flex gap-3">
+                <button
+                (click)="aprovar(item.id)"
+                class="px-4 py-2 rounded-lg font-semibold transition-colors"
+                style="background-color: #F08A5D; color: white;"
+                onmouseover="this.style.backgroundColor='#F9ED69'; this.style.color='#393939'"
+                onmouseout="this.style.backgroundColor='#F08A5D'; this.style.color='white'">
+                ✓ Aprovar
+            </button>
+            <button
+            (click)="rejeitar(item.id)"
+            class="px-4 py-2 rounded-lg font-semibold border-2 transition-colors"
+            style="border-color: #393939; color: #393939;"
+            onmouseover="this.style.backgroundColor='#393939'; this.style.color='white'"
+            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#393939'">
+            ✗ Rejeitar
+        </button>
+    </div>
+</div>
+}
+@if (filmesPendentes.length === 0) {
+    <p class="text-center py-12" style="color: #393939;">Nenhum filme pendente.</p>
+}
+</div>
+}
+
+<!-- Séries -->
+@if (activeTab === 'series') {
+    <div class="flex flex-col gap-4">
+        @for (item of seriesPendentes; track item.id) {
+            <div class="flex items-center justify-between p-4 rounded-xl border-2 shadow-sm"
+            style="border-color: #6A2C70;">
+            <div>
+                <p class="font-bold text-lg" style="color: #393939;">{{ item.title }}</p>
+                <p class="text-sm" style="color: #6A2C70;">{{ item.genre }} · {{ item.type }}</p>
+            </div>
+            <div class="flex gap-3">
+                <button
+                (click)="aprovar(item.id)"
+                class="px-4 py-2 rounded-lg font-semibold transition-colors"
+                style="background-color: #F08A5D; color: white;"
+                onmouseover="this.style.backgroundColor='#F9ED69'; this.style.color='#393939'"
+                onmouseout="this.style.backgroundColor='#F08A5D'; this.style.color='white'">
+                ✓ Aprovar
+            </button>
+            <button
+            (click)="rejeitar(item.id)"
+            class="px-4 py-2 rounded-lg font-semibold border-2 transition-colors"
+            style="border-color: #393939; color: #393939;"
+            onmouseover="this.style.backgroundColor='#393939'; this.style.color='white'"
+            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#393939'">
+            ✗ Rejeitar
+        </button>
+    </div>
+</div>
+}
+@if (seriesPendentes.length === 0) {
+    <p class="text-center py-12" style="color: #393939;">Nenhuma série pendente.</p>
+}
+</div>
+}
+
+<!-- Denúncias -->
+@if (activeTab === 'denuncias') {
+    <div class="flex flex-col gap-4">
+        @for (item of denunciasPendentes; track item.id) {
+            <div class="p-4 rounded-xl border-2 shadow-sm" style="border-color: #6A2C70;">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs mb-2" style="color: #6A2C70;">
+                            <strong>Denunciado por:</strong> {{ item.reporter_username }} &nbsp;·&nbsp;
+                            <strong>Crítica de:</strong> {{ item.reviewed_username }}
+                        </p>
+                        <p class="text-sm italic mb-2 p-2 rounded" style="background-color: #f5f5f5; color: #393939;">
+                            "{{ item.review_text }}"
+                        </p>
+                        <p class="font-bold text-lg" style="color: #393939;">{{ item.reason }}</p>
+                        <p class="text-sm mt-1" style="color: #393939;">{{ item.description }}</p>
+                    </div>
+                    <div class="flex gap-3 ml-4 shrink-0">
+                        <button
+                        (click)="resolverDenuncia(item.id)"
+                        class="px-4 py-2 rounded-lg font-semibold transition-colors"
+                        style="background-color: #F08A5D; color: white;"
+                        onmouseover="this.style.backgroundColor='#F9ED69'; this.style.color='#393939'"
+                        onmouseout="this.style.backgroundColor='#F08A5D'; this.style.color='white'">
+                        ✓ Resolver
+                    </button>
+                    <button
+                    (click)="ignorarDenuncia(item.id)"
+                    class="px-4 py-2 rounded-lg font-semibold border-2 transition-colors"
+                    style="border-color: #393939; color: #393939;"
+                    onmouseover="this.style.backgroundColor='#393939'; this.style.color='white'"
+                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#393939'">
+                    ✗ Ignorar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+}
+@if (denunciasPendentes.length === 0) {
+    <p class="text-center py-12" style="color: #393939;">Nenhuma denúncia pendente.</p>
+}
+</div>
+}
+
+</div>
