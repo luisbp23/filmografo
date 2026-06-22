@@ -7,11 +7,12 @@ import { ReviewForm } from '../../../components/review-form/review-form';
 import { AuthService } from '../../../services/auth';
 import { ReviewService } from '../../../services/review';
 import { ReportService } from '../../../services/report';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-filme-detalhe',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe, DecimalPipe, ReviewForm, RouterLink, FormsModule],
+  imports: [DatePipe, CurrencyPipe, DecimalPipe, ReviewForm, RouterLink, FormsModule, TranslatePipe],
   templateUrl: './filme-detalhe.html',
   styleUrl: './filme-detalhe.css'
 })

@@ -11,40 +11,40 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Tmdb, TmdbMovie, TrendingWindow } from '../../tmdb';
 import { AuthService } from '../../services/auth';
+import { TranslatePipe } from '../../pipes/translate.pipe'; // <-- Import do Tradutor
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, TranslatePipe], // <-- Adicionado aos imports
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
 export class Home implements OnInit {
   private tmdb = inject(Tmdb);
   private cdr = inject(ChangeDetectorRef);
-  private auth = inject(AuthService); // Serviço de Autenticação
-  
+  private auth = inject(AuthService);
+
   popularMovies: TmdbMovie[] = [];
   trendingMovies: TmdbMovie[] = [];
-  comedyMovies: TmdbMovie[] = []; // <-- NOVA VARIÁVEL
+  comedyMovies: TmdbMovie[] = [];
   
   trendingWindow: TrendingWindow = 'day';
   isLoadingTrending = false;
-  isLoadingComedy = false; // <-- NOVA VARIÁVEL
-  
-  // Variáveis para controlar o título e sessão
+  isLoadingComedy = false;
+
   isLoggedIn = false;
   username = '';
   
   @ViewChild('popularTrack') popularTrackRef?: ElementRef<HTMLDivElement>;
   @ViewChild('trendingTrack') trendingTrackRef?: ElementRef<HTMLDivElement>;
-  @ViewChild('comedyTrack') comedyTrackRef?: ElementRef<HTMLDivElement>; // <-- NOVA REFERÊNCIA
-  
+  @ViewChild('comedyTrack') comedyTrackRef?: ElementRef<HTMLDivElement>;
+
   constructor() {
     afterNextRender(() => {
       this.loadPopular();
       this.loadTrending('day');
-      this.loadComedy(); // <-- NOVA CHAMADA
+      this.loadComedy();
     });
   }
   
@@ -98,8 +98,7 @@ export class Home implements OnInit {
       }
     });
   }
-  
-  // --- NOVO MÉTODO PARA COMÉDIAS ---
+
   private loadComedy(): void {
     this.isLoadingComedy = true;
     this.tmdb.getComedyMovies().subscribe({
@@ -123,8 +122,7 @@ export class Home implements OnInit {
   scrollTrending(direction: 'left' | 'right'): void {
     this.scroll(this.trendingTrackRef, direction);
   }
-  
-  // --- NOVO MÉTODO DE SCROLL ---
+
   scrollComedy(direction: 'left' | 'right'): void {
     this.scroll(this.comedyTrackRef, direction);
   }
