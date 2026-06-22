@@ -1,4 +1,9 @@
-<h1 class="text-3xl font-bold text-orange-400 mb-1">Bem-vindo(a) ao Filmógrafo!</h1>
+@if (isLoggedIn) {
+  <h1 class="text-3xl font-bold text-orange-400 mb-1">Olá {{ username }}!</h1>
+} @else {
+  <h1 class="text-3xl font-bold text-orange-400 mb-1">Bem-vindo(a) ao Filmógrafo!</h1>
+}
+
 <p class="text-gray-600 text-lg mb-10 font-medium">Explore o catálogo de centenas de filmes e séries de todo o mundo.</p>
 
 <!-- Tendências (Hoje / Esta Semana) -->
