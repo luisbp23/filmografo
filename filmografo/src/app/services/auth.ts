@@ -34,4 +34,7 @@ export class AuthService {
       callback(session);
     });
   }
+  get supabaseClient() {
+    return this.supabase;
+  }
 }

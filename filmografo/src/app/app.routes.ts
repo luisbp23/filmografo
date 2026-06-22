@@ -6,6 +6,7 @@ import { Series } from './pages/series/series';
 import { Pessoas } from './pages/pessoas/pessoas';
 import { Login } from './pages/login/login';
 import { SignUp } from './pages/signup/signup';
+import { AddContent } from './pages/add-content/add-content';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -15,5 +16,6 @@ export const routes: Routes = [
     { path: 'pessoas', component: Pessoas },
     { path: 'login', component: Login },
     { path: 'signup', component: SignUp },
+    { path:'add-content', component: AddContent},
     { path: '**', redirectTo: '' }
 ];

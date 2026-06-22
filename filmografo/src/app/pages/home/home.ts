@@ -43,11 +43,9 @@ export class Home implements OnInit {
   }
 
   async ngOnInit() {
-    // 1. Vai buscar a sessão inicial
     const { data: { session } } = await this.auth.getSession();
     this.atualizarEstadoAutenticacao(session);
 
-    // 2. Fica atento se o utilizador fizer login/logout
     this.auth.onAuthChange((session) => {
       this.atualizarEstadoAutenticacao(session);
     });
@@ -62,7 +60,6 @@ export class Home implements OnInit {
       this.username = '';
     }
     
-    // Força o Angular a renderizar o ecrã com o novo nome
     this.cdr.detectChanges(); 
   }
 
